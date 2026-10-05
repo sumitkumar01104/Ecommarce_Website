@@ -1,0 +1,8 @@
+{% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert" style="border-radius:10px; font-size:13px;">
+    <i class="fas fa-info-circle mr-2"></i>{{ message }}
+    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+  </div>
+  {% endfor %}
+{% endif %}

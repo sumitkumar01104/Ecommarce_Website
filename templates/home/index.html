@@ -1,0 +1,161 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}ShopKart — Best Deals Online{% endblock %}
+
+{% block start %}
+
+<!-- Hero Banner -->
+<section style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); padding: 70px 0; overflow:hidden; position:relative;">
+  <div style="position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(233,69,96,.12);border-radius:50%;"></div>
+  <div style="position:absolute;bottom:-80px;left:10%;width:250px;height:250px;background:rgba(245,166,35,.08);border-radius:50%;"></div>
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <p style="color:var(--accent);font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase; margin-bottom:12px;">
+          <i class="fas fa-bolt mr-1"></i> New Season Arrivals
+        </p>
+        <h1 style="font-family:var(--font-head); color:#fff; font-size:clamp(36px,5vw,58px); line-height:1.15; margin-bottom:20px;">
+          Discover Your<br>Perfect <span style="color:var(--accent);">Style</span>
+        </h1>
+        <p style="color:rgba(255,255,255,.65); font-size:16px; max-width:420px; line-height:1.7; margin-bottom:32px;">
+          Explore thousands of products across fashion, electronics, and lifestyle — all at unbeatable prices.
+        </p>
+        <a href="#products" class="btn-accent mr-3" style="display:inline-block; text-decoration:none;">
+          Shop Now <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+        <a href="#" style="color:rgba(255,255,255,.7); font-size:14px; text-decoration:none;">
+          View Offers <i class="fas fa-tag ml-1"></i>
+        </a>
+      </div>
+      <div class="col-lg-6 d-none d-lg-flex justify-content-end">
+        <div style="display:flex; gap:16px;">
+          <div style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:24px 20px; text-align:center; width:130px;">
+            <div style="font-family:var(--font-head); font-size:32px; color:#fff; font-weight:700;">50K+</div>
+            <div style="color:rgba(255,255,255,.5); font-size:12px; margin-top:4px;">Products</div>
+          </div>
+          <div style="background:rgba(233,69,96,.15); border:1px solid rgba(233,69,96,.25); border-radius:16px; padding:24px 20px; text-align:center; width:130px; margin-top:30px;">
+            <div style="font-family:var(--font-head); font-size:32px; color:var(--accent); font-weight:700;">4.8★</div>
+            <div style="color:rgba(255,255,255,.5); font-size:12px; margin-top:4px;">Avg Rating</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:24px 20px; text-align:center; width:130px;">
+            <div style="font-family:var(--font-head); font-size:32px; color:#fff; font-weight:700;">2M+</div>
+            <div style="color:rgba(255,255,255,.5); font-size:12px; margin-top:4px;">Customers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Strips -->
+<section style="background:#fff; padding:20px 0; border-bottom:1px solid #eee;">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-6 col-md-3 py-2">
+        <i class="fas fa-shipping-fast" style="color:var(--accent); font-size:22px;"></i>
+        <p style="font-size:13px; font-weight:600; margin:6px 0 2px;">Free Shipping</p>
+        <p style="font-size:11px; color:#888; margin:0;">On orders above ₹999</p>
+      </div>
+      <div class="col-6 col-md-3 py-2">
+        <i class="fas fa-undo-alt" style="color:var(--accent); font-size:22px;"></i>
+        <p style="font-size:13px; font-weight:600; margin:6px 0 2px;">Easy Returns</p>
+        <p style="font-size:11px; color:#888; margin:0;">7-day return policy</p>
+      </div>
+      <div class="col-6 col-md-3 py-2">
+        <i class="fas fa-lock" style="color:var(--accent); font-size:22px;"></i>
+        <p style="font-size:13px; font-weight:600; margin:6px 0 2px;">Secure Payment</p>
+        <p style="font-size:11px; color:#888; margin:0;">100% secure checkout</p>
+      </div>
+      <div class="col-6 col-md-3 py-2">
+        <i class="fas fa-headset" style="color:var(--accent); font-size:22px;"></i>
+        <p style="font-size:13px; font-weight:600; margin:6px 0 2px;">24/7 Support</p>
+        <p style="font-size:11px; color:#888; margin:0;">Always here to help</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" style="padding: 60px 0;">
+  <div class="container">
+
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <p style="color:var(--accent); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">{% if category %}Category{% else %}Our Collection{% endif %}</p>
+        <h2 style="font-family:var(--font-head); font-size:32px; margin:0; color:var(--primary);">{% if category %}{{ category.category_name }}{% else %}Featured Products{% endif %}</h2>
+      </div>
+      {% if category %}
+      <a href="{% url 'index' %}" style="color:var(--accent); font-size:13px; font-weight:600; text-decoration:none;">
+        View All <i class="fas fa-arrow-right ml-1"></i>
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="row">
+      {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3 mb-4">
+        <a href="{% url 'get_product' product.slug %}" style="text-decoration:none; color:inherit;">
+          <div class="product-card" style="background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.06); transition: transform .2s, box-shadow .2s; cursor:pointer;"
+               onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,.12)';"
+               onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 16px rgba(0,0,0,.06)';">
+
+            <!-- Product Image -->
+            <div style="position:relative; overflow:hidden; height:220px; background:#f0f0f0;">
+              {% if product.product_images.first %}
+                <img src="{{ product.product_images.first.image.url }}" alt="{{ product.product_name }}"
+                  style="width:100%; height:100%; object-fit:cover; transition:transform .3s;"
+                  onmouseover="this.style.transform='scale(1.05)';"
+                  onmouseout="this.style.transform='scale(1)';">
+              {% else %}
+                <div style="height:100%; display:flex; align-items:center; justify-content:center; color:#ccc; flex-direction:column;">
+                  <i class="fas fa-image" style="font-size:40px;"></i>
+                  <span style="font-size:12px; margin-top:8px;">No Image</span>
+                </div>
+              {% endif %}
+              <!-- Badge -->
+              <span style="position:absolute; top:10px; left:10px; background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:.5px;">New</span>
+              <!-- Wishlist -->
+              <button style="position:absolute; top:10px; right:10px; background:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.1); display:flex; align-items:center; justify-content:center;"
+                onclick="event.preventDefault(); this.querySelector('i').style.color='var(--accent)';">
+                <i class="far fa-heart" style="font-size:14px; color:#999;"></i>
+              </button>
+            </div>
+
+            <!-- Product Info -->
+            <div style="padding:14px 16px 16px;">
+              <p style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
+                {{ product.category.category_name }}
+              </p>
+              <h6 style="font-weight:600; font-size:14px; margin-bottom:8px; color:var(--primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                {{ product.product_name }}
+              </h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span style="font-size:17px; font-weight:700; color:var(--accent);">₹{{ product.price }}</span>
+                </div>
+                <button style="background:var(--primary); color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; transition:background .2s;"
+                  onmouseover="this.style.background='var(--accent)';"
+                  onmouseout="this.style.background='var(--primary)';"
+                  onclick="quickAddToCart(event, '{{ product.slug }}')">
+                  <i class="fas fa-cart-plus"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-box-open" style="font-size:60px; color:#ddd;"></i>
+        <h5 style="color:#aaa; margin-top:16px; font-family:var(--font-head);">No Products Found</h5>
+        <p style="color:#bbb; font-size:14px;">{% if category %}Is category mein abhi koi product nahi hai.{% else %}Products will appear here once added from admin panel.{% endif %}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.product_name }} — ShopKart{% endblock %}
+
+{% block start %}
+
+<style>
+  .thumb-img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .thumb-img:hover, .thumb-img.active { border-color: var(--accent); }
+
+  .size-radio { display: none; }
+  .size-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--primary);
+    transition: all .2s;
+    margin-right: 8px;
+  }
+  .size-radio:checked + .size-label {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .color-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    margin-right: 8px;
+    display: inline-block;
+  }
+  .color-btn:hover { transform: scale(1.15); box-shadow: 0 0 0 3px rgba(233,69,96,.3); }
+
+  .qty-btn {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1;
+    transition: all .15s;
+  }
+  .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .qty-input {
+    width: 50px;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 6px 0;
+    margin: 0 6px;
+    outline: none;
+  }
+</style>
+
+<div class="container" style="padding: 40px 15px;">
+
+  <!-- Breadcrumb -->
+  <nav style="margin-bottom:24px; font-size:13px; color:#aaa;">
+    <a href="{% url 'index' %}" style="color:#aaa; text-decoration:none;">Home</a>
+    <span class="mx-2">/</span>
+    <a href="{% url 'category' product.category.slug %}" style="color:#aaa; text-decoration:none;">{{ product.category.category_name }}</a>
+    <span class="mx-2">/</span>
+    <span style="color:var(--primary); font-weight:500;">{{ product.product_name }}</span>
+  </nav>
+
+  <div class="row">
+
+    <!-- Left: Images -->
+    <div class="col-lg-5 mb-4">
+      <!-- Main Image -->
+      <div style="background:#f8f9fc; border-radius:16px; overflow:hidden; height:420px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; position:relative;">
+        {% if product.product_images.first %}
+          <img id="main-img" src="{{ product.product_images.first.image.url }}" alt="{{ product.product_name }}"
+            style="max-height:100%; max-width:100%; object-fit:contain; transition:opacity .2s;">
+        {% else %}
+          <div style="text-align:center; color:#ccc;">
+            <i class="fas fa-image" style="font-size:60px;"></i>
+            <p style="margin-top:10px; font-size:13px;">No image available</p>
+          </div>
+        {% endif %}
+        <!-- Zoom hint -->
+        <span style="position:absolute; bottom:12px; right:12px; background:rgba(0,0,0,.5); color:#fff; font-size:11px; padding:4px 10px; border-radius:20px;">
+          <i class="fas fa-search-plus mr-1"></i> Zoom
+        </span>
+      </div>
+
+      <!-- Thumbnails -->
+      {% if product.product_images.count > 1 %}
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        {% for image in product.product_images.all %}
+        <img src="{{ image.image.url }}" alt="" class="thumb-img {% if forloop.first %}active{% endif %}"
+          onclick="document.getElementById('main-img').src='{{ image.image.url }}';
+                   document.querySelectorAll('.thumb-img').forEach(t=>t.classList.remove('active'));
+                   this.classList.add('active');">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right: Details -->
+    <div class="col-lg-7">
+      <div style="background:#fff; border-radius:16px; padding:32px; box-shadow:0 4px 24px rgba(0,0,0,.06);">
+
+        <!-- Category Tag -->
+        <span style="background:rgba(233,69,96,.1); color:var(--accent); font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; text-transform:uppercase; letter-spacing:1px;">
+          {{ product.category.category_name }}
+        </span>
+
+        <!-- Name -->
+        <h1 style="font-family:var(--font-head); font-size:28px; color:var(--primary); margin:14px 0 10px; line-height:1.3;">
+          {{ product.product_name }}
+        </h1>
+
+        <!-- Rating -->
+        <div class="d-flex align-items-center mb-16px" style="margin-bottom:16px;">
+          <div style="color:#f5a623;">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          </div>
+          <span style="font-size:13px; color:#888; margin-left:8px;">4.5 (132 reviews)</span>
+          <span style="margin:0 10px; color:#ddd;">|</span>
+          <span style="font-size:13px; color:#27ae60;"><i class="fas fa-clipboard-check mr-1"></i>154 orders</span>
+        </div>
+
+        <!-- Price -->
+        <div style="margin-bottom:20px;">
+          <span style="font-family:var(--font-head); font-size:36px; font-weight:700; color:var(--accent);">₹{{ product.price }}</span>
+          <span style="text-decoration:line-through; color:#aaa; font-size:18px; margin-left:10px;">₹{{ product.price|add:product.price }}</span>
+          <span style="background:#e8f5e9; color:#27ae60; font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; margin-left:10px;">50% OFF</span>
+        </div>
+
+        <hr style="border-color:#f0f0f0; margin:20px 0;">
+
+        <!-- Description -->
+        <p style="color:#666; font-size:14px; line-height:1.8; margin-bottom:20px;">
+          {{ product.product_desription }}
+        </p>
+
+        <!-- Color Variants -->
+        <form method="post" action="{% url 'add_to_cart' product.slug %}" id="add-to-cart-form">
+          {% csrf_token %}
+          {% if product.color_variant.count %}
+          <div style="margin-bottom:20px;">
+            <p style="font-size:13px; font-weight:600; color:var(--primary); margin-bottom:10px;">
+              Select Color: <span style="font-weight:400; color:#888;" id="selected-color">—</span>
+            </p>
+            {% for color in product.color_variant.all %}
+            <input type="radio" name="color_variant" id="color_{{ color.id }}" value="{{ color.id }}"
+              style="display:none;" {% if forloop.first %}checked{% endif %}
+              onclick="document.getElementById('selected-color').textContent='{{ color.color_name }}'">
+            <label for="color_{{ color.id }}" class="color-btn" title="{{ color.color_name }}"
+              data-color="{{ color.color_name|lower }}">
+            </label>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Size Variants -->
+          {% if product.size_variant.count %}
+          <div style="margin-bottom:20px;">
+            <p style="font-size:13px; font-weight:600; color:var(--primary); margin-bottom:10px;">Select Size:</p>
+            {% for size in product.size_variant.all %}
+            <input type="radio" name="size_variant" id="size_{{ forloop.counter }}" class="size-radio" value="{{ size.id }}" {% if forloop.first %}checked{% endif %}>
+            <label for="size_{{ forloop.counter }}" class="size-label">{{ size.size_name }}</label>
+            {% endfor %}
+            <a href="#" style="font-size:12px; color:var(--accent); margin-left:8px; text-decoration:underline;">Size Guide</a>
+          </div>
+          {% endif %}
+
+          <!-- Quantity -->
+          <div style="margin-bottom:24px;">
+            <p style="font-size:13px; font-weight:600; color:var(--primary); margin-bottom:10px;">Quantity:</p>
+            <div style="display:flex; align-items:center;">
+              <button type="button" class="qty-btn" onclick="var i=document.getElementById('qty');if(i.value>1)i.value=parseInt(i.value)-1;">−</button>
+              <input type="number" name="quantity" id="qty" class="qty-input" value="1" min="1"
+                     max="{% if product.stock > 98 %}99{% else %}{{ product.stock }}{% endif %}">
+              <button type="button" class="qty-btn" onclick="var i=document.getElementById('qty');if(parseInt(i.max)>parseInt(i.value))i.value=parseInt(i.value)+1;">+</button>
+              {% if product.stock > 5 %}
+              <span style="font-size:12px; color:#27ae60; margin-left:12px;">
+                <i class="fas fa-check-circle mr-1"></i> In Stock
+              </span>
+              {% elif product.stock > 0 %}
+              <span style="font-size:12px; color:#e67e22; margin-left:12px;">
+                <i class="fas fa-exclamation-circle mr-1"></i> Only {{ product.stock }} left
+              </span>
+              {% else %}
+              <span style="font-size:12px; color:#e74c3c; margin-left:12px;">
+                <i class="fas fa-times-circle mr-1"></i> Out of Stock
+              </span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex flex-wrap" style="gap:12px; margin-bottom:20px;">
+            <button type="submit" name="buy_now" value="1" formaction="{% url 'add_to_cart' product.slug %}" class="btn-accent" style="border:none; cursor:pointer;"
+              {% if not product.stock %}disabled{% endif %}>
+              <i class="fas fa-bolt mr-2"></i>Buy Now
+            </button>
+            <button type="submit" class="btn-outline-accent" style="cursor:pointer;"
+              {% if not product.stock %}disabled{% endif %}>
+              <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+            </button>
+            <a href="#" style="display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border:2px solid #e0e0e0; border-radius:10px; color:#aaa; text-decoration:none; transition:all .2s;"
+              onmouseover="this.style.borderColor='var(--accent)';this.querySelector('i').style.color='var(--accent)';"
+              onmouseout="this.style.borderColor='#e0e0e0';this.querySelector('i').style.color='#aaa';">
+              <i class="far fa-heart" style="font-size:18px;"></i>
+            </a>
+          </div>
+        </form>
+
+
+        <!-- Delivery Info -->
+        <div style="background:#f8f9fc; border-radius:12px; padding:16px; font-size:13px; color:#666;">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-truck" style="color:var(--accent); width:20px;"></i>
+            <span class="ml-2"><strong>Free delivery</strong> on this order</span>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-undo" style="color:var(--accent); width:20px;"></i>
+            <span class="ml-2"><strong>7-day</strong> easy return policy</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-shield-alt" style="color:var(--accent); width:20px;"></i>
+            <span class="ml-2"><strong>Authentic</strong> product guaranteed</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Paint each colour swatch from its data-color attribute
+  document.querySelectorAll('.color-btn').forEach(function (btn) {
+    btn.style.background = btn.dataset.color;
+  });
+</script>
+
+{% endblock %}

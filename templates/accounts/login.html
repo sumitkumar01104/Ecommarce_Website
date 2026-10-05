@@ -1,0 +1,156 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Sign In — ShopKart{% endblock %}
+
+{% block start %}
+
+<style>
+  .auth-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .auth-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 48px rgba(0,0,0,.10);
+    overflow: hidden;
+    width: 100%;
+    max-width: 440px;
+  }
+  .auth-card-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    padding: 36px 36px 28px;
+    text-align: center;
+  }
+  .auth-card-body { padding: 32px 36px 36px; }
+  .form-control-custom {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color .2s;
+    background: #fafafa;
+  }
+  .form-control-custom:focus { border-color: var(--accent); background: #fff; }
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .btn-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    letter-spacing: .3px;
+  }
+  .btn-submit:hover { background: #c73652; transform: translateY(-1px); }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ccc;
+    font-size: 12px;
+    margin: 20px 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #eee;
+  }
+</style>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <!-- Header -->
+    <div class="auth-card-header">
+      <a href="{% url 'index' %}" style="font-family:var(--font-head); font-size:28px; color:#fff; text-decoration:none; font-weight:700;">
+        Shop<span style="color:var(--accent)">Kart</span>
+      </a>
+      <h2 style="color:#fff; font-size:20px; margin:14px 0 4px; font-family:var(--font-head);">Welcome Back!</h2>
+      <p style="color:rgba(255,255,255,.55); font-size:13px; margin:0;">Sign in to your account to continue</p>
+    </div>
+
+    <!-- Body -->
+    <div class="auth-card-body">
+
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="border-radius:10px; font-size:13px;">
+          <i class="fas fa-exclamation-circle mr-2"></i>{{ message }}
+          <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <div style="position:relative; margin-bottom:16px;">
+          <i class="fas fa-envelope input-icon"></i>
+          <input name="email" type="email" class="form-control-custom" placeholder="Email address" required autocomplete="email">
+        </div>
+
+        <div style="position:relative; margin-bottom:8px;">
+          <i class="fas fa-lock input-icon"></i>
+          <input name="password" type="password" id="password-field" class="form-control-custom" placeholder="Password" required autocomplete="current-password">
+          <span onclick="var f=document.getElementById('password-field'); f.type=f.type==='password'?'text':'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"
+            class="fas fa-eye" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#aaa; cursor:pointer; font-size:15px;"></span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center" style="margin-bottom:22px;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:#666; cursor:pointer; margin:0;">
+            <input type="checkbox" style="accent-color:var(--accent);"> Remember me
+          </label>
+          <a href="#" style="color:var(--accent); font-size:13px; text-decoration:none;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Sign In <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+
+      </form>
+
+      <div class="divider">or continue with</div>
+
+      <div class="d-flex" style="gap:12px; margin-bottom:24px;">
+        <a href="#" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:11px; border:2px solid #eee; border-radius:10px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:border-color .2s;"
+          onmouseover="this.style.borderColor='#ddd';" onmouseout="this.style.borderColor='#eee';">
+          <i class="fab fa-google" style="color:#ea4335;"></i> Google
+        </a>
+        <a href="#" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:11px; border:2px solid #eee; border-radius:10px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:border-color .2s;"
+          onmouseover="this.style.borderColor='#ddd';" onmouseout="this.style.borderColor='#eee';">
+          <i class="fab fa-facebook-f" style="color:#1877f2;"></i> Facebook
+        </a>
+      </div>
+
+      <p style="text-align:center; font-size:14px; color:#888; margin:0;">
+        Don't have an account?
+        <a href="{% url 'register' %}" style="color:var(--accent); font-weight:600; text-decoration:none;">Create one free</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

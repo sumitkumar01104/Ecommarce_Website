@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Account Verification — ShopKart{% endblock %}
+
+{% block start %}
+<div class="container" style="padding: 60px 0; text-align:center;">
+  {% if success %}
+    <i class="fas fa-check-circle" style="font-size:56px; color:#27ae60;"></i>
+    <h2 style="margin-top:16px;">Email Verified!</h2>
+  {% else %}
+    <i class="fas fa-times-circle" style="font-size:56px; color:#e74c3c;"></i>
+    <h2 style="margin-top:16px;">Verification Failed</h2>
+  {% endif %}
+
+  <p style="color:#666; margin-top:12px;">{{ message }}</p>
+
+  <a href="{% url 'login' %}" class="btn-accent" style="display:inline-block; margin-top:20px; text-decoration:none;">
+    Go to Login
+  </a>
+</div>
+{% endblock %}
