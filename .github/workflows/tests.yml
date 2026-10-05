@@ -19,6 +19,7 @@ jobs:
     services:
       postgres:
         image: postgres:16
+
         env:
           POSTGRES_DB: ecommerce_test
           POSTGRES_USER: postgres
@@ -35,6 +36,7 @@ jobs:
 
       redis:
         image: redis:7
+
         ports:
           - 6379:6379
 
@@ -46,7 +48,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -55,7 +57,7 @@ jobs:
 
       - name: Create environment variables
         run: |
-          echo "SECRET_KEY=test-secret-key" >> $GITHUB_ENV
+          echo "SECRET_KEY=django-insecure-ci-test-key-1234567890abcdef" >> $GITHUB_ENV
           echo "DEBUG=True" >> $GITHUB_ENV
           echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> $GITHUB_ENV
 
@@ -78,6 +80,10 @@ jobs:
       - name: Run migrations
         run: |
           python manage.py migrate
+
+      - name: Collect static files
+        run: |
+          python manage.py collectstatic --noinput
 
       - name: Run Django tests
         run: |
