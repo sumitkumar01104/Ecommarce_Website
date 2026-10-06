@@ -1,5 +1,11 @@
 # ShopKart: Django E-commerce
 
+🔗 **Live demo:** https://ecommarce-website-l7cr.onrender.com
+_(Hosted on Render's free plan, so the first load after a period of inactivity can take 30-60 seconds.)_
+
+**Demo account:** `demo@example.com` · password `Demo@12345`
+_(Demo only. Email delivery is not enabled on the live site, so new sign-ups cannot verify their email. Please use this account to explore.)_
+
 A full-stack e-commerce application built with Django. It covers the complete shopping flow: browse products, add to cart (even as a guest), verify your email, place a Cash-on-Delivery order, and receive a PDF invoice by email. Email sending runs in the background with Celery and Redis.
 
 ## Features
@@ -12,10 +18,11 @@ A full-stack e-commerce application built with Django. It covers the complete sh
 - **PDF invoice:** generated with ReportLab and attached to the order confirmation email
 - **REST API:** register, login, logout, profile, JWT tokens with refresh and blacklist, Swagger / ReDoc docs
 - **Docker:** `docker compose` setup for web, PostgreSQL, Redis and the Celery worker
+- **Deployment:** Dockerized and deployed on Render, with product images stored on Cloudinary
 
 ## Tech stack
 
-Python, Django, Django REST Framework, SimpleJWT, drf-spectacular, Celery, Redis, PostgreSQL, ReportLab, Docker.
+Python, Django, Django REST Framework, SimpleJWT, drf-spectacular, Celery, Redis, PostgreSQL, ReportLab, Docker, Gunicorn, WhiteNoise, Cloudinary, Render.
 
 ## Project structure
 
@@ -71,6 +78,7 @@ Fill in `.env`:
 | `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Gmail address and a Gmail **App Password** (needs 2-step verification) |
 | `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` | Redis URLs |
 | `SITE_NAME`, `DELIVERY_DAYS`, `SITE_DOMAIN` | Used in emails and invoices |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary credentials for uploaded product images |
 
 Never commit `.env`.
 
@@ -94,7 +102,7 @@ celery -A ecommarce worker -l info --pool=solo
 celery -A ecommarce worker -l info
 ```
 
-Open http://127.0.0.1:8000/. Add categories and products from the admin panel at `/admin/`.
+Open http://127.0.0.1:8000/. Add categories and products from the admin panel at `/admin/`, or load sample data with `python manage.py seed_products`.
 
 ## Run with Docker
 
@@ -104,6 +112,10 @@ docker compose exec web python manage.py createsuperuser
 ```
 
 This starts PostgreSQL, Redis, the Django app (migrations run on start) and the Celery worker. The app is available at http://127.0.0.1:8000/.
+
+## Deployment (Render)
+
+The app is deployed as a Docker web service on Render with a managed PostgreSQL database. Configuration is done through environment variables (see `.env.example`). Static files are served by WhiteNoise and uploaded images are stored on Cloudinary, because Render's disk is not persistent.
 
 ## Main routes
 
@@ -149,7 +161,7 @@ _Add screenshots of the home page, product page, cart, checkout and invoice here
 - Resend verification email
 - Online payments
 - Automated tests
-- Production settings (HTTPS, static files, gunicorn)
+- Email delivery and Celery worker on the live deployment
 
 ## Author
 
