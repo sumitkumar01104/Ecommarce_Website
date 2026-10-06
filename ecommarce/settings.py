@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',  
 
     # Third-party apps
     'rest_framework',
@@ -243,7 +245,7 @@ STATICFILES_DIRS = [
 # WhiteNoise static storage
 STORAGES = {
     'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
     },
 
     'staticfiles': {
@@ -251,8 +253,11 @@ STORAGES = {
             'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
-
-
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
+   }
 # ─────────────────────────────────────────────
 # Media files
 # ─────────────────────────────────────────────
