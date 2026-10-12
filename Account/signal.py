@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
@@ -12,7 +13,11 @@ def create_profile(sender, instance, created, **kwargs):
     if not created:
         return
 
-    needs_verification = bool(instance.email) and not instance.is_superuser
+    needs_verification = (
+        bool(instance.email)
+        and not instance.is_superuser
+        and not settings.DEMO_MODE
+    )
     email_token = str(uuid.uuid4()) if needs_verification else None
 
     Profile.objects.create(
