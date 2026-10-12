@@ -185,16 +185,18 @@ def checkout(request):
             # Clear cart after order is created
             items.delete()
 
-        # Send confirmation email asynchronously
-        try:
-            send_order_confirmation_email.delay(order.id)
+        # Send confirmation email asynchronously (skipped in demo mode,
+        # where there is no Celery worker)
+        if not settings.DEMO_MODE:
+            try:
+                send_order_confirmation_email.delay(order.id)
 
-        except Exception:
-            messages.warning(
-                request,
-                "Order placed, but the confirmation email could not "
-                "be queued. Please make sure Redis/Celery worker is running."
-            )
+            except Exception:
+                messages.warning(
+                    request,
+                    "Order placed, but the confirmation email could not "
+                    "be queued. Please make sure Redis/Celery worker is running."
+                )
 
         messages.success(
             request,
@@ -231,7 +233,8 @@ def order_success(request, order_id):
         request,
         'orders/order_success.html',
         {
-            'order': order
+            'order': order,
+            'demo_mode': settings.DEMO_MODE
         }
     )
 
