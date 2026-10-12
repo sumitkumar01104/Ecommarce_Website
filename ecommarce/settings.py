@@ -321,6 +321,16 @@ SITE_DOMAIN = config(
     default='http://127.0.0.1:8000'
 )
 
+# Demo mode, for free hosting (e.g. Render) where there is no Celery worker
+# and outbound SMTP is not available. When True: new users are verified
+# automatically and no emails are queued. Keep False locally / in Docker so
+# the full verification + order-email flow runs.
+DEMO_MODE = config(
+    'DEMO_MODE',
+    default=False,
+    cast=bool
+)
+
 
 # ─────────────────────────────────────────────
 # Celery / Redis
@@ -360,4 +370,3 @@ CELERY_TASK_IGNORE_RESULT = True
 LOGIN_URL = 'login'
 
 LOGIN_REDIRECT_URL = 'index'
-
