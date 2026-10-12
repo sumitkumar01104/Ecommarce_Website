@@ -4,7 +4,7 @@
 _(Hosted on Render's free plan, so the first load after a period of inactivity can take 30-60 seconds.)_
 
 **Demo account:** `demo@example.com` · password `Demo@12345`
-_(Demo only. Email delivery is not enabled on the live site, so new sign-ups cannot verify their email. Please use this account to explore.)_
+_(The live site runs in **demo mode** because Render's free plan has no Celery worker: new sign-ups are verified automatically and emails are turned off. Run it locally or with Docker for the full email verification and order-invoice flow.)_
 
 A full-stack e-commerce application built with Django. It covers the complete shopping flow: browse products, add to cart (even as a guest), verify your email, place a Cash-on-Delivery order, and receive a PDF invoice by email. Email sending runs in the background with Celery and Redis.
 
@@ -77,6 +77,7 @@ Fill in `.env`:
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | PostgreSQL connection |
 | `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Gmail address and a Gmail **App Password** (needs 2-step verification) |
 | `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` | Redis URLs |
+| `DEMO_MODE` | `False` (default) = full email flow. `True` = auto-verify users and skip emails, for hosting without a Celery worker |
 | `SITE_NAME`, `DELIVERY_DAYS`, `SITE_DOMAIN` | Used in emails and invoices |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary credentials for uploaded product images |
 
@@ -115,7 +116,7 @@ This starts PostgreSQL, Redis, the Django app (migrations run on start) and the 
 
 ## Deployment (Render)
 
-The app is deployed as a Docker web service on Render with a managed PostgreSQL database. Configuration is done through environment variables (see `.env.example`). Static files are served by WhiteNoise and uploaded images are stored on Cloudinary, because Render's disk is not persistent.
+The app is deployed as a Docker web service on Render with a managed PostgreSQL database. Configuration is done through environment variables (see `.env.example`). Set `DEMO_MODE=True` on Render's free plan, since there is no Celery worker there. Static files are served by WhiteNoise and uploaded images are stored on Cloudinary, because Render's disk is not persistent.
 
 ## Main routes
 
