@@ -13,7 +13,11 @@
     <i class="fas fa-truck mr-1"></i> Estimated delivery within {{ order.created_at|date:"d M" }} + 3 days
   </p>
   <p style="color:#666; margin-top:16px;">
+    {% if demo_mode %}
+    Demo mode: confirmation emails are turned off on this live demo.
+    {% else %}
     A confirmation email with your invoice has been sent to <strong>{{ order.user.email }}</strong>.
+    {% endif %}
   </p>
   <a href="{% url 'index' %}" class="btn-accent" style="display:inline-block; margin-top:20px; text-decoration:none;">
     Continue Shopping
