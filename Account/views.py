@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -100,6 +101,8 @@ class RegisterView(APIView):
         return Response(
             {
                 "message": (
+                    "Registration successful. You can log in now."
+                    if settings.DEMO_MODE else
                     "Registration successful. "
                     "Please check your email and verify your account."
                 )
@@ -225,10 +228,16 @@ def register_page(request):
             password=password
         )
 
-        messages.success(
-            request,
-            'Account created! Please check your email and verify your account.'
-        )
+        if settings.DEMO_MODE:
+            messages.success(
+                request,
+                'Account created! You can log in now.'
+            )
+        else:
+            messages.success(
+                request,
+                'Account created! Please check your email and verify your account.'
+            )
 
         return redirect('login')
 
