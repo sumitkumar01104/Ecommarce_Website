@@ -18,11 +18,12 @@ A full-stack e-commerce application built with Django. It covers the complete sh
 - **PDF invoice:** generated with ReportLab and attached to the order confirmation email
 - **REST API:** register, login, logout, profile, JWT tokens with refresh and blacklist, Swagger / ReDoc docs
 - **Docker:** `docker compose` setup for web, PostgreSQL, Redis and the Celery worker
+- **Tests and CI:** Django tests run automatically on every push with GitHub Actions
 - **Deployment:** Dockerized and deployed on Render, with product images stored on Cloudinary
 
 ## Tech stack
 
-Python, Django, Django REST Framework, SimpleJWT, drf-spectacular, Celery, Redis, PostgreSQL, ReportLab, Docker, Gunicorn, WhiteNoise, Cloudinary, Render.
+Python, Django, Django REST Framework, SimpleJWT, drf-spectacular, Celery, Redis, PostgreSQL, ReportLab, Docker, Gunicorn, WhiteNoise, Cloudinary, GitHub Actions, Render.
 
 ## Project structure
 
@@ -49,7 +50,7 @@ templates/            HTML templates
 
 ```bash
 git clone <your-repo-url>
-cd Ecommarce_Fixed
+cd Ecommarce_Website
 
 python -m venv cenv
 # Windows
@@ -74,6 +75,8 @@ Fill in `.env`:
 | Variable | Purpose |
 | --- | --- |
 | `SECRET_KEY` | Django secret key. Generate one with `python -c "import secrets; print(secrets.token_urlsafe(50))"` |
+| `DEBUG` | `True` for local development, `False` in production |
+| `ALLOWED_HOSTS` | Comma-separated hosts, e.g. `127.0.0.1,localhost` |
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | PostgreSQL connection |
 | `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Gmail address and a Gmail **App Password** (needs 2-step verification) |
 | `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` | Redis URLs |
@@ -113,6 +116,14 @@ docker compose exec web python manage.py createsuperuser
 ```
 
 This starts PostgreSQL, Redis, the Django app (migrations run on start) and the Celery worker. The app is available at http://127.0.0.1:8000/.
+
+## Tests
+
+```bash
+python manage.py test
+```
+
+The same tests run on every push and pull request through GitHub Actions (`.github/workflows/tests.yml`), against PostgreSQL and Redis.
 
 ## Deployment (Render)
 
@@ -161,7 +172,6 @@ _Add screenshots of the home page, product page, cart, checkout and invoice here
 
 - Resend verification email
 - Online payments
-- Automated tests
 - Email delivery and Celery worker on the live deployment
 
 ## Author
